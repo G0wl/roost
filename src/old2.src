@@ -1,0 +1,80 @@
+use std::io;
+pub fn not(bool: bool) -> bool {
+        let mut bool0: bool = false;
+        if bool == bool0 {
+            bool0 = true;
+        }
+        else {
+            bool0 = false;
+        }
+        return bool0;
+}
+pub fn xor(bool1: bool, bool2: bool) -> bool {
+    let mut bool: bool = false;
+    if bool1 != bool2 {
+        bool = true;
+    }
+    return bool;
+}
+
+fn byte_to_binary(byte: u8) -> Vec<bool> {
+    let mut binary = Vec::new();
+    for i in 0..8 {
+      binary.push((byte & (1 << (7 - i))) > 0);
+    }
+    return binary;
+}
+
+fn binary_to_byte(binary: &[bool]) -> u8 {
+    let mut byte = 0;
+    for (i, bit) in binary.iter().enumerate() {
+      byte |= (*bit as u8) << (7 - i);
+    }
+    return byte;
+}
+
+fn not_byte(byte: u8) -> u8 {
+    let notbyte: u8 = 0;
+    let mut boolz: Vec<bool> = Vec::new();
+    let schoolz: Vec<bool> = byte_to_binary(byte);
+    for i in 0..schoolz.len() {
+        let not: bool = not(schoolz[i]);
+        boolz.push(not);
+    }
+    let notbyte: u8 = binary_to_byte(&boolz);
+    return notbyte;
+}
+
+fn xor_byte(byte1:u8, byte2: u8) -> u8 {
+    let mut xorbyte: u8 = 0;
+    let mut boozult: Vec<bool> = Vec::new();
+    let bool1: Vec<bool> = byte_to_binary(byte1);
+    let bool2: Vec<bool> = byte_to_binary(byte2);
+    let len: usize = bool1.len() + bool2.len();
+    for i in 0..len {
+        let mut ibllo1: bool = byte_to_binary(byte1)[0];
+        let mut ibllo2: bool = byte_to_binary(byte2)[1];
+        boozult.push(xor(ibllo1, ibllo2));
+    }
+    xorbyte = binary_to_byte(&boozult);
+    return xorbyte;
+}
+
+fn main() {
+    loop {
+        let mut h: String = String::new();
+        let mut k: String = String::new();
+        let mut pp: Vec<u8> = Vec::new();
+        println!("plaintext");
+        io::stdin().read_line(&mut h);
+        println!("key");
+        io::stdin().read_line(&mut k);
+        let hb = h.as_bytes();
+        let kb = k.as_bytes();
+        for i in 0..hb.len() {
+            let p = xor_byte(hb[i], kb[i]);;
+            pp.push(p);
+        }
+        println!("{:?}", pp)
+    }
+}

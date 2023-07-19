@@ -1,0 +1,272 @@
+/*use std::time::Duration;
+use enigo::{self, KeyboardControllable, MouseControllable};
+use inputbot;
+use hex;
+fn not(bool: bool) -> bool {
+    let mut bool0: bool = false;
+    if bool == bool0 {
+        bool0 = true;
+    }
+    else {
+        bool0 = false;
+    }
+    return bool0;
+}
+fn rev_and(bool0: bool, bool1: bool) -> Vec<bool> {
+let mut bool2: bool = false;
+let mut bools: Vec<bool> = Vec::new();
+if bool0 == bool1 && bool1 == true {
+    bool2 = true;
+}
+else {
+    bool2 = false;
+}
+bools.push(bool2);
+bools.push(bool1);
+return bools;
+}
+
+fn rev_or(bool0: bool, bool1: bool) -> Vec<bool>{
+let mut bool2: bool = false;
+let mut bools: Vec<bool> = Vec::new();
+if bool0 != bool1 && bool1 == true {
+    bool2 = true;
+}
+else if bool0 != bool1 && bool1 == false {
+    bool2 = false;
+}
+else if bool0 == bool1 && bool1 == true {
+    bool2 = true;
+}
+else if bool0 == bool1 && bool1 == false {
+    bool2 = false;
+}
+bools.push(bool2);
+bools.push(bool1);
+return bools;
+}
+
+fn rev_xor(bool1: bool, bool2: bool) -> Vec<bool> {
+let mut bool11: bool = false;
+if bool1 != bool2 {
+    bool11 = true;
+}
+let mut bools: Vec<bool> = Vec::new();
+bools.push(bool11);
+bools.push(bool2);
+return bools;
+}
+
+fn rev_xnor(bool0: bool, bool1: bool) -> Vec<bool> {
+let rxor: Vec<bool> = rev_xor(bool0, bool1);
+let not1: bool = not(rxor[1]);
+let not2: bool = not(rxor[2]);
+let mut bools: Vec<bool> = Vec::new();
+bools.push(not1);
+bools.push(not2);
+return bools;
+}
+
+fn rev_nor(bool0: bool, bool1: bool) -> Vec<bool> {
+let ror: Vec<bool> = rev_or(bool0, bool1);
+let not1: bool = not(ror[1]);
+let not2: bool = not(ror[2]);
+let mut bools: Vec<bool> = Vec::new();
+bools.push(not1);
+bools.push(not2);
+return bools;
+}
+
+fn rev_nand(bool0: bool, bool1: bool) -> Vec<bool> {
+let rand: Vec<bool> = rev_and(bool0, bool1);
+let not1: bool = not(rand[1]);
+let not2: bool = not(rand[2]);
+let mut bools: Vec<bool> = Vec::new();
+bools.push(not1);
+bools.push(not2);
+return bools;
+}
+
+
+fn b2b(bytes: &[u8]) -> Vec<bool> {
+    let mut binary: Vec<bool> = Vec::with_capacity(bytes.len() * 8);
+    for byte in bytes {
+        for i in 0..8 {
+            binary.push((byte & (1 << i)) > 0);
+        }
+    }
+    return binary;
+}
+fn main() {
+    let mut enigo: enigo::Enigo = enigo::Enigo::new();
+    loop{
+    std::thread::sleep(Duration::from_secs(6));
+    enigo.mouse_click(enigo::MouseButton::Left);
+    }
+}
+fn byte_to_binary(byte: u8) -> Vec<bool> {
+    let mut binary = Vec::new();
+    for i in 0..8 {
+      binary.push((byte & (1 << (7 - i))) > 0);
+    }
+    return binary;
+  }
+fn to_u8(binary: &Vec<bool>) -> Vec<u8> {
+    let mut bytes = Vec::with_capacity(binary.len() / 8);
+    let mut byte = 0u8;
+    for i in 0..binary.len() {
+        if binary[i] {
+            byte |= 1 << (7 - i);
+        }
+        if i % 8 == 7 {
+            bytes.push(byte);
+            byte = 0;
+        }
+    }
+    if byte != 0 {
+        bytes.push(byte);
+    }
+    return bytes;
+}
+
+fn not_bytes(bytes: &[u8]) -> Vec<u8> {
+    let mut notbytes: Vec<u8> = Vec::new();
+    let mut pools: Vec<bool> = Vec::new();
+    let bools: Vec<bool> = b2b(bytes);
+    for i in  0..bools.len() {
+        let not: bool = not(bools[i]);
+        pools.push(not);
+    }
+    let notbytes: Vec<u8> = to_u8(&pools);
+    return notbytes;
+}
+fn binary_to_byte(binary: &[bool]) -> u8 {
+    let mut byte = 0;
+    for (i, bit) in binary.iter().enumerate() {
+      byte |= (*bit as u8) << (7 - i);
+    }
+    return byte;
+}
+fn not_byte(byte: u8) -> u8 {
+    let notbyte: u8 = 0;
+    let mut boolz: Vec<bool> = Vec::new();
+    let schoolz: Vec<bool> = byte_to_binary(byte);
+    for i in 0..schoolz.len() {
+        let not: bool = not(schoolz[i]);
+        boolz.push(not);
+    }
+    let notbyte: u8 = binary_to_byte(&boolz);
+    return notbyte;
+}
+//TODO somthing;
+
+fn xor_bytes(bytearray1: &[u8], bytearray2: &[u8]) -> Vec<u8> {
+    let mut xorbytes: Vec<u8> = Vec::new();
+    let mut boozult: Vec<bool> = Vec::new();
+    let bool1: Vec<bool> = b2b(bytearray1);
+    let bool2: Vec<bool> = b2b(bytearray2);
+    let len: usize = bool1.len() + bool2.len();
+    for i in 0..len {
+        let mut ibool1: bool = b2b(bytearray1)[0];
+        let mut ibool2: bool = b2b(bytearray2)[0];
+        boozult.push(rev_xor(ibool1, ibool2)[i]);
+
+    }
+    xorbytes = to_u8(&boozult);
+    return xorbytes;
+}
+
+fn xor_byte(byte1:u8, byte2: u8) -> u8 {
+    let mut xorbyte: u8 = 0;
+    let mut boozult: Vec<bool> = Vec::new();
+    let bool1: Vec<bool> = byte_to_binary(byte1);
+    let bool2: Vec<bool> = byte_to_binary(byte2);
+    let len: usize = bool1.len() + bool2.len();
+    for i in 0..len {
+        let mut ibllo1: bool = byte_to_binary(byte1)[0];
+        let mut ibllo2: bool = byte_to_binary(byte2)[1];
+        boozult.push(rev_xor(ibllo1, ibllo2)[i]);
+    }
+    xorbyte = binary_to_byte(&boozult);
+    return xorbyte;
+}
+
+fn t2b(text: String) -> Vec<u8> {
+    let bytes: &[u8] = text.as_bytes();
+    return bytes.to_vec();
+}
+
+fn enc(text: String, key: String) /*-> String*/ {
+    let not_text: Vec<u8> = not_bytes(t2b(text).as_slice());
+    let not_key: Vec<u8> = not_bytes(t2b(key).as_slice());
+    let ntslice: &[u8] = not_text.as_slice();
+    let nkslice: &[u8] = not_key.as_slice();
+    let nsxor: Vec<u8> = xor_bytes(ntslice, nkslice);
+    let nxnot1: u8 = not_byte(nsxor.as_slice()[0]);
+    let nxnot2: u8 = not_byte(nsxor.as_slice()[1]);
+    let rawcrypt: u8 = xor_byte(nxnot1, nxnot2);
+    let encrypted: Vec<u8> = Vec::new();
+
+}
+
+use std::io;
+pub fn not(bool: bool) -> bool {
+        let mut bool0: bool = false;
+        if bool == bool0 {
+            bool0 = true;
+        }
+        else {
+            bool0 = false;
+        }
+        return bool0;
+}
+pub fn xor(bool1: bool, bool2: bool) -> bool {
+    let mut bool: bool = false;
+    if bool1 != bool2 {
+        bool = true;
+    }
+    return bool;
+}
+
+fn byte_to_binary(byte: u8) -> Vec<bool> {
+    let mut binary = Vec::new();
+    for i in 0..8 {
+      binary.push((byte & (1 << (7 - i))) > 0);
+    }
+    return binary;
+}
+
+fn binary_to_byte(binary: &[bool]) -> u8 {
+    let mut byte = 0;
+    for (i, bit) in binary.iter().enumerate() {
+      byte |= (*bit as u8) << (7 - i);
+    }
+    return byte;
+}
+
+fn not_byte(byte: u8) -> u8 {
+    let notbyte: u8 = 0;
+    let mut boolz: Vec<bool> = Vec::new();
+    let schoolz: Vec<bool> = byte_to_binary(byte);
+    for i in 0..schoolz.len() {
+        let not: bool = not(schoolz[i]);
+        boolz.push(not);
+    }
+    let notbyte: u8 = binary_to_byte(&boolz);
+    return notbyte;
+}
+
+fn xor_byte(byte1:u8, byte2: u8) -> u8 {
+    let mut xorbyte: u8 = 0;
+    let mut boozult: Vec<bool> = Vec::new();
+    let bool1: Vec<bool> = byte_to_binary(byte1);
+    let bool2: Vec<bool> = byte_to_binary(byte2);
+    let len: usize = bool1.len() + bool2.len();
+    for i in 0..len {
+        let mut ibllo1: bool = byte_to_binary(byte1)[0];
+        let mut ibllo2: bool = byte_to_binary(byte2)[1];
+        boozult.push(xor(ibllo1, ibllo2));
+    }
+    xorbyte = binary_to_byte(&boozult);
+    return xorbyte;
+}*/
